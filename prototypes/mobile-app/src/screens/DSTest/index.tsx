@@ -192,15 +192,15 @@ function BadgeProduct({ variant }: { variant: 'light' | 'heavy' }) {
 }
 
 // ── Badge Status ───────────────────────────────────────────────────────────────
-type BadgeState = 'success' | 'informative' | 'warning' | 'error' | 'finished'
-const badgeMap: Record<BadgeState, { bg: string; border: string; text: string; label: string }> = {
+type IBadgeState = 'success' | 'informative' | 'warning' | 'error' | 'finished'
+const badgeMap: Record<IBadgeState, { bg: string; border: string; text: string; label: string }> = {
   success:     { bg: T.bg.successSubtle, border: T.border.success, text: T.text.success, label: 'Lunas' },
   informative: { bg: T.bg.infoSubtle,    border: T.border.info,    text: T.text.info,    label: 'Aktif' },
   warning:     { bg: T.bg.warningSubtle, border: T.border.warning,  text: T.text.warning, label: 'Menunggu' },
   error:       { bg: T.bg.errorSubtle,   border: T.border.error,    text: T.text.error,   label: 'Ditolak' },
   finished:    { bg: T.bg.disabled,      border: T.border.subtle,   text: T.text.subtle,  label: 'Selesai' },
 }
-function BadgeStatus({ state, label }: { state: BadgeState; label?: string }) {
+function BadgeStatus({ state, label }: { state: IBadgeState; label?: string }) {
   const t = badgeMap[state]
   return (
     <span style={{
@@ -212,15 +212,15 @@ function BadgeStatus({ state, label }: { state: BadgeState; label?: string }) {
 }
 
 // ── Banner Info ────────────────────────────────────────────────────────────────
-type BannerType = 'base' | 'informative' | 'success' | 'alert' | 'error'
-const bannerMap: Record<BannerType, { bg: string; border: string; text: string; icon: React.ReactNode; label: string }> = {
+type IBannerType = 'base' | 'informative' | 'success' | 'alert' | 'error'
+const bannerMap: Record<IBannerType, { bg: string; border: string; text: string; icon: React.ReactNode; label: string }> = {
   base:        { bg: T.bg.subtle,        border: T.border.default, text: T.text.default,  icon: <Icon.Info color={T.icon.subtle} />,   label: 'Base — informasi umum' },
   informative: { bg: T.bg.infoSubtle,    border: T.border.info,    text: T.text.info,     icon: <Icon.Info />,                          label: 'Informasi penting untuk kamu' },
   success:     { bg: T.bg.successSubtle, border: T.border.success,  text: T.text.success,  icon: <Icon.CheckCircle />,                   label: 'Berhasil! Data telah disimpan' },
   alert:       { bg: T.bg.warningSubtle, border: T.border.warning,  text: T.text.warning,  icon: <Icon.Warning />,                       label: 'Perhatikan batas waktu pembayaran' },
   error:       { bg: T.bg.errorSubtle,   border: T.border.error,    text: T.text.error,    icon: <Icon.XCircle />,                       label: 'Terjadi kesalahan, coba lagi' },
 }
-function BannerInfo({ type }: { type: BannerType }) {
+function BannerInfo({ type }: { type: IBannerType }) {
   const t = bannerMap[type]
   return (
     <div style={{
@@ -236,20 +236,20 @@ function BannerInfo({ type }: { type: BannerType }) {
 }
 
 // ── Button ─────────────────────────────────────────────────────────────────────
-type BtnType = 'primary' | 'secondary' | 'ghost' | 'destructive'
-type BtnSize = 'lg' | 'md' | 'sm' | 'xs'
-const btnBase: Record<BtnType, { bg: string; text: string; border?: string }> = {
+type IBtnType = 'primary' | 'secondary' | 'ghost' | 'destructive'
+type IBtnSize = 'lg' | 'md' | 'sm' | 'xs'
+const btnBase: Record<IBtnType, { bg: string; text: string; border?: string }> = {
   primary:     { bg: T.bg.primary,  text: T.text.neutral },
   secondary:   { bg: T.bg.neutral,  text: T.text.default, border: T.border.default },
   ghost:       { bg: 'transparent', text: T.text.link },
   destructive: { bg: T.bg.error,    text: T.text.neutral },
 }
-const btnSz: Record<BtnSize, { h: number; px: number; fs: number }> = {
+const btnSz: Record<IBtnSize, { h: number; px: number; fs: number }> = {
   lg: { h: 44, px: 16, fs: 14 }, md: { h: 38, px: 16, fs: 14 },
   sm: { h: 30, px: 8,  fs: 14 }, xs: { h: 24, px: 8,  fs: 12 },
 }
 function Button({ label, type = 'primary', size = 'lg', disabled = false, loading = false, fullWidth = false, onClick }: {
-  label: string; type?: BtnType; size?: BtnSize; disabled?: boolean; loading?: boolean; fullWidth?: boolean; onClick?: () => void
+  label: string; type?: IBtnType; size?: IBtnSize; disabled?: boolean; loading?: boolean; fullWidth?: boolean; onClick?: () => void
 }) {
   const [hov, setHov] = useState(false)
   const s = btnBase[type]; const sz = btnSz[size]
@@ -347,10 +347,10 @@ function DividerComp({ type }: { type: 'line' | 'gap' | 'dash' }) {
 }
 
 // ── List ───────────────────────────────────────────────────────────────────────
-type ListState = 'active' | 'hovered' | 'disabled'
-type ListAction = 'checkbox' | 'radio' | 'arrow' | 'none'
+type IListState = 'active' | 'hovered' | 'disabled'
+type IListAction = 'checkbox' | 'radio' | 'arrow' | 'none'
 function ListItem({ label, sub, state = 'active', nested = false, action = 'arrow' }: {
-  label: string; sub?: string; state?: ListState; nested?: boolean; action?: ListAction
+  label: string; sub?: string; state?: IListState; nested?: boolean; action?: IListAction
 }) {
   const [hov, setHov] = useState(false)
   const isDisabled = state === 'disabled'
@@ -405,18 +405,18 @@ function SkeletonCircle({ size = 40 }: { size?: number }) {
 }
 
 // ── Modal ──────────────────────────────────────────────────────────────────────
-type ModalVariant = 'default' | 'info' | 'success' | 'alert' | 'error'
-const modalIcon: Record<ModalVariant, React.ReactNode> = {
+type IModalVariant = 'default' | 'info' | 'success' | 'alert' | 'error'
+const modalIcon: Record<IModalVariant, React.ReactNode> = {
   default: null,
   info:    <div style={{ width: 48, height: 48, borderRadius: T.radius.full, backgroundColor: T.bg.infoSubtle, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon.Info /></div>,
   success: <div style={{ width: 48, height: 48, borderRadius: T.radius.full, backgroundColor: T.bg.successSubtle, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon.CheckCircle /></div>,
   alert:   <div style={{ width: 48, height: 48, borderRadius: T.radius.full, backgroundColor: T.bg.warningSubtle, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon.Warning /></div>,
   error:   <div style={{ width: 48, height: 48, borderRadius: T.radius.full, backgroundColor: T.bg.errorSubtle, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon.XCircle /></div>,
 }
-const modalTitle: Record<ModalVariant, string> = {
+const modalTitle: Record<IModalVariant, string> = {
   default: 'Konfirmasi Aksi', info: 'Informasi', success: 'Berhasil!', alert: 'Perhatian', error: 'Terjadi Kesalahan',
 }
-function ModalComp({ variant, onClose }: { variant: ModalVariant; onClose: () => void }) {
+function ModalComp({ variant, onClose }: { variant: IModalVariant; onClose: () => void }) {
   return (
     <div style={{
       position: 'absolute', inset: 0, backgroundColor: 'rgba(15,17,41,0.7)',
@@ -541,8 +541,8 @@ function Radio({ label, selected = false, disabled = false, onClick }: {
 // (StepIndicator and StepLine are inlined inside Stepper for layout control)
 
 // ── Stepper ────────────────────────────────────────────────────────────────────
-type StepState = 'inactive' | 'active' | 'completed'
-function StepIndicator({ state }: { state: StepState }) {
+type IStepState = 'inactive' | 'active' | 'completed'
+function StepIndicator({ state }: { state: IStepState }) {
   const bg = state === 'inactive' ? T.bg.disabled : T.bg.primary
   const tc = state === 'inactive' ? T.text.disabled : T.text.neutral
   return (
@@ -559,7 +559,7 @@ function Stepper({ steps, activeStep }: { steps: string[]; activeStep: number })
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         {steps.map((_, i) => {
-          const state: StepState = i < activeStep ? 'completed' : i === activeStep ? 'active' : 'inactive'
+          const state: IStepState = i < activeStep ? 'completed' : i === activeStep ? 'active' : 'inactive'
           return (
             <div key={i} style={{ display: 'flex', alignItems: 'center', flex: i < steps.length - 1 ? 1 : 0 }}>
               <div style={{ width: 24, height: 24, borderRadius: T.radius.full, backgroundColor: state === 'inactive' ? T.bg.disabled : T.bg.primary, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -643,8 +643,8 @@ function TabSecondary({ tabs, active, onChange }: { tabs: string[]; active: numb
 }
 
 // ── Text Field ─────────────────────────────────────────────────────────────────
-type FieldState = 'default' | 'focused' | 'error' | 'success' | 'disabled'
-const fieldBorderMap: Record<FieldState, { color: string; width: number }> = {
+type IFieldState = 'default' | 'focused' | 'error' | 'success' | 'disabled'
+const fieldBorderMap: Record<IFieldState, { color: string; width: number }> = {
   default:  { color: T.border.default, width: 1 },
   focused:  { color: '#73AEFF',        width: 3 },
   error:    { color: T.border.error,   width: 1 },
@@ -652,12 +652,12 @@ const fieldBorderMap: Record<FieldState, { color: string; width: number }> = {
   disabled: { color: T.border.default, width: 1 },
 }
 function TextField({ label, placeholder = 'Placeholder', helper, state = 'default', suffix }: {
-  label: string; placeholder?: string; helper?: string; state?: FieldState; suffix?: React.ReactNode
+  label: string; placeholder?: string; helper?: string; state?: IFieldState; suffix?: React.ReactNode
 }) {
   const [focused, setFocused] = useState(false)
   const [val, setVal] = useState(state === 'error' || state === 'success' ? '081234567890' : state === 'disabled' ? 'Nilai tetap' : '')
   const isDisabled = state === 'disabled'
-  const activeState: FieldState = isDisabled ? 'disabled' : focused ? 'focused' : state
+  const activeState: IFieldState = isDisabled ? 'disabled' : focused ? 'focused' : state
   const br = fieldBorderMap[activeState]
   const labelClr = state === 'error' ? T.text.error : T.text.default
   const helpClr  = state === 'error' ? T.text.error : state === 'success' ? T.text.success : T.text.subtle
@@ -681,12 +681,12 @@ function TextField({ label, placeholder = 'Placeholder', helper, state = 'defaul
 
 // ── Text Area ──────────────────────────────────────────────────────────────────
 function TextArea({ label, placeholder = 'Tulis di sini...', state = 'default' }: {
-  label: string; placeholder?: string; state?: FieldState
+  label: string; placeholder?: string; state?: IFieldState
 }) {
   const [focused, setFocused] = useState(false)
   const [val, setVal] = useState('')
   const isDisabled = state === 'disabled'
-  const activeState: FieldState = isDisabled ? 'disabled' : focused ? 'focused' : state
+  const activeState: IFieldState = isDisabled ? 'disabled' : focused ? 'focused' : state
   const br = fieldBorderMap[activeState]
   const labelClr = state === 'error' ? T.text.error : T.text.default
   const helpClr  = state === 'error' ? T.text.error : state === 'success' ? T.text.success : T.text.subtle
@@ -711,14 +711,14 @@ function TextArea({ label, placeholder = 'Tulis di sini...', state = 'default' }
 }
 
 // ── Toast ──────────────────────────────────────────────────────────────────────
-type ToastType = 'positive' | 'alert' | 'error' | 'general'
-const toastMap: Record<ToastType, { bg: string; icon: React.ReactNode; text: string; label: string }> = {
+type IToastType = 'positive' | 'alert' | 'error' | 'general'
+const toastMap: Record<IToastType, { bg: string; icon: React.ReactNode; text: string; label: string }> = {
   positive: { bg: T.bg.successSubtle, icon: <Icon.CheckCircle />, text: T.text.success, label: 'Pembayaran berhasil diproses' },
   alert:    { bg: T.bg.warningSubtle, icon: <Icon.Warning />,     text: T.text.warning, label: 'Batas waktu pembayaran 2 jam lagi' },
   error:    { bg: T.bg.errorSubtle,   icon: <Icon.XCircle />,     text: T.text.error,   label: 'Gagal memuat data, coba lagi' },
   general:  { bg: T.bg.dark,          icon: <Icon.Info color={T.icon.neutral} />, text: T.text.neutral, label: 'Sesi kamu akan berakhir' },
 }
-function Toast({ type }: { type: ToastType }) {
+function Toast({ type }: { type: IToastType }) {
   const t = toastMap[type]
   return (
     <div style={{
@@ -941,7 +941,7 @@ function SideNavbarPreview() {
 // PAGE
 // ═══════════════════════════════════════════════════════════════════════════════
 export default function DSTest() {
-  const [modalVariant, setModalVariant] = useState<ModalVariant | null>(null)
+  const [modalVariant, setModalVariant] = useState<IModalVariant | null>(null)
   const [showBottomSheet, setShowBottomSheet] = useState(false)
   const [activeChip, setActiveChip] = useState('Semua')
   const [radioVal, setRadioVal] = useState('emas')
@@ -1019,7 +1019,7 @@ export default function DSTest() {
               <HR />
               <SubLabel>Status — Light</SubLabel>
               <Row gap={6} wrap>
-                {(['success', 'informative', 'warning', 'error', 'finished'] as BadgeState[]).map(s => <BadgeStatus key={s} state={s} />)}
+                {(['success', 'informative', 'warning', 'error', 'finished'] as IBadgeState[]).map(s => <BadgeStatus key={s} state={s} />)}
               </Row>
             </Card>
           </Section>
@@ -1028,7 +1028,7 @@ export default function DSTest() {
           <Section title="Banner Info">
             <Card>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                {(['base', 'informative', 'success', 'alert', 'error'] as BannerType[]).map(t => <BannerInfo key={t} type={t} />)}
+                {(['base', 'informative', 'success', 'alert', 'error'] as IBannerType[]).map(t => <BannerInfo key={t} type={t} />)}
               </div>
             </Card>
           </Section>
@@ -1046,7 +1046,7 @@ export default function DSTest() {
               <HR />
               <SubLabel>Sizes — Primary</SubLabel>
               <Row wrap>
-                {(['lg', 'md', 'sm', 'xs'] as BtnSize[]).map(s => <Button key={s} label={s.toUpperCase()} size={s} />)}
+                {(['lg', 'md', 'sm', 'xs'] as IBtnSize[]).map(s => <Button key={s} label={s.toUpperCase()} size={s} />)}
               </Row>
               <HR />
               <SubLabel>States</SubLabel>
@@ -1104,9 +1104,9 @@ export default function DSTest() {
               </div>
               {/* Cells */}
               {[
-                { name: 'Andi S.', amount: 'Rp 2.000.000', state: 'success' as BadgeState },
-                { name: 'Budi R.', amount: 'Rp 5.500.000', state: 'informative' as BadgeState },
-                { name: 'Citra M.', amount: 'Rp 1.200.000', state: 'error' as BadgeState },
+                { name: 'Andi S.', amount: 'Rp 2.000.000', state: 'success' as IBadgeState },
+                { name: 'Budi R.', amount: 'Rp 5.500.000', state: 'informative' as IBadgeState },
+                { name: 'Citra M.', amount: 'Rp 1.200.000', state: 'error' as IBadgeState },
               ].map((row, i) => (
                 <div key={i} style={{ display: 'flex', borderBottom: `1px solid ${T.border.subtle}` }}>
                   <div style={{ width: 32, height: 64, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -1195,7 +1195,7 @@ export default function DSTest() {
             <Card>
               <SubLabel>Trigger per variant</SubLabel>
               <Row wrap gap={8}>
-                {(['default', 'info', 'success', 'alert', 'error'] as ModalVariant[]).map(v => (
+                {(['default', 'info', 'success', 'alert', 'error'] as IModalVariant[]).map(v => (
                   <Button key={v} label={v} size="sm" type={v === 'error' ? 'destructive' : v === 'default' ? 'secondary' : 'primary'} onClick={() => setModalVariant(v)} />
                 ))}
               </Row>
@@ -1315,7 +1315,7 @@ export default function DSTest() {
           <Section title="Toast">
             <Card>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                {(['positive', 'alert', 'error', 'general'] as ToastType[]).map(t => <Toast key={t} type={t} />)}
+                {(['positive', 'alert', 'error', 'general'] as IToastType[]).map(t => <Toast key={t} type={t} />)}
               </div>
             </Card>
           </Section>

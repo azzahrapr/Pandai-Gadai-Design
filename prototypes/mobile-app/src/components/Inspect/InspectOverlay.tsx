@@ -1,5 +1,5 @@
 import { useRef, useEffect } from 'react'
-import { useInspect, SelectedInfo } from './InspectContext'
+import { useInspect, ISelectedInfo } from './InspectContext'
 import { inspectStore } from './inspectStore'
 
 // ── Cortes token maps (from design-tokens.md) ──────────────────────────────
@@ -151,7 +151,7 @@ function buildAutoRows(el: HTMLElement, cs: CSSStyleDeclaration): string[] {
 
 // ── Info builder ──────────────────────────────────────────────────────────
 
-function buildInfo(el: HTMLElement): SelectedInfo {
+function buildInfo(el: HTMLElement): ISelectedInfo {
   // 1. Image
   if (el.tagName === 'IMG') {
     const img = el as HTMLImageElement

@@ -7,7 +7,7 @@ const imgRight = "/assets/status-right.svg"
 const POIN_BALANCE: number = 12000
 const POIN_EARN    = 2000
 
-interface PinjamanItem {
+interface IPinjamanItem {
   nilai: number
   name?: string
   [key: string]: unknown
@@ -19,7 +19,7 @@ function fmt(n: number) {
   return 'Rp' + n.toLocaleString('id-ID')
 }
 
-type PoinState = 'available' | 'selected' | 'insufficient' | 'maintenance'
+type IPoinState = 'available' | 'selected' | 'insufficient' | 'maintenance'
 
 function Toggle({ on, disabled, onClick }: { on: boolean; disabled?: boolean; onClick: () => void }) {
   return (
@@ -49,7 +49,7 @@ function IconPoinEmas({ faded }: { faded?: boolean }) {
 export default function PinjamanPerpanjang() {
   const navigate = useNavigate()
   const location = useLocation()
-  const pinjaman = (location.state as { pinjaman?: PinjamanItem } | null)?.pinjaman
+  const pinjaman = (location.state as { pinjaman?: IPinjamanItem } | null)?.pinjaman
   const biayaJasa = Math.round((pinjaman?.nilai ?? 850000) * 0.10)
 
   const [poinOn, setPoinOn] = useState(false)
@@ -57,7 +57,7 @@ export default function PinjamanPerpanjang() {
 
   const DEMO_POIN_BALANCE = POIN_BALANCE
   // Derive poin state based on balance
-  const poinState = (DEMO_POIN_BALANCE === 0 ? 'insufficient' : poinOn ? 'selected' : 'available') as PoinState
+  const poinState = (DEMO_POIN_BALANCE === 0 ? 'insufficient' : poinOn ? 'selected' : 'available') as IPoinState
   const poinDisabled = poinState === 'insufficient' || poinState === 'maintenance'
 
   const poinDiscount = poinState === 'selected' ? DEMO_POIN_BALANCE : 0

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-type OverlayType = 'pilih' | 'perpanjang' | 'tebus' | null
+type IOverlayType = 'pilih' | 'perpanjang' | 'tebus' | null
 
 // ── Shared helpers ────────────────────────────────────────────────────────────
 function useSlideUp(open: boolean) {
@@ -295,7 +295,7 @@ function TebusOverlay({ isGold, onBack, onClose }: { isGold?: boolean; onBack: (
 // ── Main page ─────────────────────────────────────────────────────────────────
 export default function PaymentDetail() {
   const navigate = useNavigate()
-  const [overlay, setOverlay] = useState<OverlayType>(null)
+  const [overlay, setOverlay] = useState<IOverlayType>(null)
   const isGold = false // switch to true for gold asset variant
 
   const closeAll = () => setOverlay(null)

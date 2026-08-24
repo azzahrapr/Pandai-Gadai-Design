@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { InspectLabel } from './InspectLabel'
+import { InspectLabel } from '../../components/Inspect/InspectLabel'
 
 const imgDate  = "/assets/status-date.svg"
 const imgRight = "/assets/status-right.svg"

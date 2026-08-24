@@ -1,13 +1,13 @@
 import { useInspect } from './InspectContext'
 
-interface Props {
+interface IInspectLabelProps {
   label: string
   tokens?: string[]
   children: React.ReactNode
   className?: string
 }
 
-export function InspectLabel({ label, tokens = [], children, className = '' }: Props) {
+export function InspectLabel({ label, tokens = [], children, className = '' }: IInspectLabelProps) {
   const { active } = useInspect()
 
   if (!active) return <>{children}</>

@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 
-export interface SelectedInfo {
+export interface ISelectedInfo {
   type: 'component' | 'image' | 'svg' | 'element'
   label: string
   tokens: string[]
@@ -16,13 +16,13 @@ export interface SelectedInfo {
   markupId?: number
 }
 
-interface InspectCtxType {
+interface IInspectCtxType {
   active: boolean
-  selectedInfo: SelectedInfo | null
-  setSelectedInfo: (info: SelectedInfo | null) => void
+  selectedInfo: ISelectedInfo | null
+  setSelectedInfo: (info: ISelectedInfo | null) => void
 }
 
-const InspectCtx = createContext<InspectCtxType>({
+const InspectCtx = createContext<IInspectCtxType>({
   active: false,
   selectedInfo: null,
   setSelectedInfo: () => {},
@@ -34,7 +34,7 @@ export function InspectProvider({ children }: { children: React.ReactNode }) {
     const fromSession = sessionStorage.getItem('pandai_inspect') === 'true'
     return fromUrl || fromSession
   })
-  const [selectedInfo, setSelectedInfo] = useState<SelectedInfo | null>(null)
+  const [selectedInfo, setSelectedInfo] = useState<ISelectedInfo | null>(null)
 
   useEffect(() => {
     sessionStorage.setItem('pandai_inspect', active ? 'true' : 'false')

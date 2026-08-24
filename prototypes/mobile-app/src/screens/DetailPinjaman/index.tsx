@@ -44,7 +44,7 @@ const pilihOptions = [
   },
 ]
 
-interface PinjamanItem {
+interface IPinjamanItem {
   id?: string
   sbg?: string
   status?: 'aktif' | 'selesai'
@@ -58,7 +58,7 @@ interface PinjamanItem {
   action?: 'Bayar' | 'Gadai Lagi'
 }
 
-function ItemIcon({ type }: { type: PinjamanItem['iconType'] }) {
+function ItemIcon({ type }: { type: IPinjamanItem['iconType'] }) {
   if (type === 'tv') return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#023dff" strokeWidth="1.5" strokeLinecap="round">
       <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
@@ -81,7 +81,7 @@ function ItemIcon({ type }: { type: PinjamanItem['iconType'] }) {
 export default function DetailPinjaman() {
   const navigate = useNavigate()
   const location = useLocation()
-  const pinjaman = (location.state as { pinjaman?: PinjamanItem } | null)?.pinjaman
+  const pinjaman = (location.state as { pinjaman?: IPinjamanItem } | null)?.pinjaman
   const [showSheet, setShowSheet] = useState(false)
 
   const status       = pinjaman?.status ?? 'aktif'

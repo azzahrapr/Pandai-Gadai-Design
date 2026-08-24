@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useInspect, SelectedInfo } from './InspectContext'
+import { useInspect, ISelectedInfo } from './InspectContext'
 import { inspectStore } from './inspectStore'
 
 // ── Utilities ──────────────────────────────────────────────────────────────
@@ -179,7 +179,7 @@ function hexFromVal(val: string): string | null {
 
 // ── Panel bodies ───────────────────────────────────────────────────────────
 
-function ImageBody({ info }: { info: SelectedInfo }) {
+function ImageBody({ info }: { info: ISelectedInfo }) {
   const { src, isSvg, displayW = 0, displayH = 0, naturalW = 0, naturalH = 0, elId = 0 } = info
   const filename = (src || '').split('/').pop()?.split('?')[0] || '<img>'
   const isLowRes = !isSvg && naturalW < displayW * 2
@@ -219,7 +219,7 @@ function ImageBody({ info }: { info: SelectedInfo }) {
   )
 }
 
-function SvgBody({ info }: { info: SelectedInfo }) {
+function SvgBody({ info }: { info: ISelectedInfo }) {
   const { displayW = 0, displayH = 0, elId = 0, markupId } = info
   const markupStr = markupId ? (inspectStore.getStr(markupId) ?? '') : ''
   return (
@@ -245,7 +245,7 @@ function SvgBody({ info }: { info: SelectedInfo }) {
   )
 }
 
-function TokenBody({ info }: { info: SelectedInfo }) {
+function TokenBody({ info }: { info: ISelectedInfo }) {
   const isAuto = info.type === 'element'
   return (
     <div className="px-[12px] pt-[10px] pb-[12px]">

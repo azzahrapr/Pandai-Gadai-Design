@@ -97,7 +97,7 @@ function ArrowRightSmall({ className = "size-3" }: { className?: string }) {
   );
 }
 
-interface PinjamanItem {
+interface IPinjamanItem {
   id: string
   name: string
   category: string
@@ -108,7 +108,7 @@ interface PinjamanItem {
   status: 'aktif' | 'selesai'
 }
 
-const pinjamanItems: PinjamanItem[] = [
+const pinjamanItems: IPinjamanItem[] = [
   {
     id: 'p1',
     name: 'SAMSUNG GALAXY A52S 6/128GB',
@@ -141,7 +141,7 @@ const pinjamanItems: PinjamanItem[] = [
   },
 ]
 
-function AssetCardIcon({ type }: { type: PinjamanItem['iconType'] }) {
+function AssetCardIcon({ type }: { type: IPinjamanItem['iconType'] }) {
   if (type === 'tv') return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#023dff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
@@ -162,7 +162,7 @@ function AssetCardIcon({ type }: { type: PinjamanItem['iconType'] }) {
   )
 }
 
-function AssetCard({ item, onAction }: { item: PinjamanItem; onAction: () => void }) {
+function AssetCard({ item, onAction }: { item: IPinjamanItem; onAction: () => void }) {
   return (
     <div className="pressable bg-white border border-slate-200 flex h-28 items-center overflow-hidden rounded-2xl shrink-0 w-80">
       <div className="flex flex-col gap-2 flex-1 pl-4 pr-2 py-3 border-r border-slate-200 h-full justify-center">

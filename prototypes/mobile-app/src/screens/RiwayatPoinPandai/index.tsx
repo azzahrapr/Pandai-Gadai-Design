@@ -4,11 +4,11 @@ import { useNavigate } from 'react-router-dom'
 const imgDate  = "/assets/status-date.svg"
 const imgRight = "/assets/status-right.svg"
 
-type TabKey = 'aktivitas' | 'kedaluwarsa'
-type Direction = 'masuk' | 'keluar'
+type ITabKey = 'aktivitas' | 'kedaluwarsa'
+type IDirection = 'masuk' | 'keluar'
 
-interface Transaction {
-  direction: Direction
+interface ITransaction {
+  direction: IDirection
   category: string
   date: string
   title: string
@@ -16,7 +16,7 @@ interface Transaction {
   poin: number
 }
 
-const aktivitasData: Transaction[] = [
+const aktivitasData: ITransaction[] = [
   { direction: 'masuk', category: 'Tarik Saldo', date: '25 Agu 2024, 14:51', title: 'Tarik Saldo',   subtitle: 'Rp128.000',       poin: 2000 },
   { direction: 'masuk', category: 'PDAM',         date: '25 Agu 2024, 14:51', title: 'Tagihan PDAM', subtitle: '321123*********', poin: 2000 },
   { direction: 'masuk', category: 'Listrik',      date: '25 Agu 2024, 14:51', title: 'Listrik PLN',  subtitle: '321123*********', poin: 2000 },
@@ -62,7 +62,7 @@ function KeluarIcon() {
   )
 }
 
-function TransactionCard({ tx, isKedaluwarsa }: { tx: Transaction; isKedaluwarsa: boolean }) {
+function TransactionCard({ tx, isKedaluwarsa }: { tx: ITransaction; isKedaluwarsa: boolean }) {
   const isMasuk = tx.direction === 'masuk'
 
   const badgeBg    = isKedaluwarsa ? '#f1f5f9' : isMasuk ? '#fffdc6' : '#fef2f2'
@@ -106,7 +106,7 @@ function TransactionCard({ tx, isKedaluwarsa }: { tx: Transaction; isKedaluwarsa
 
 export default function RiwayatPoinPandai() {
   const navigate = useNavigate()
-  const [activeTab, setActiveTab] = useState<TabKey>('aktivitas')
+  const [activeTab, setActiveTab] = useState<ITabKey>('aktivitas')
 
   return (
     <div className="w-[375px] bg-white flex flex-col overflow-hidden rounded-3xl shadow-2xl" style={{ height: 812 }}>
@@ -131,7 +131,7 @@ export default function RiwayatPoinPandai() {
 
       {/* Filter tabs */}
       <div className="flex gap-2 px-4 pb-3 shrink-0">
-        {(['aktivitas', 'kedaluwarsa'] as TabKey[]).map((tab) => {
+        {(['aktivitas', 'kedaluwarsa'] as ITabKey[]).map((tab) => {
           const active = activeTab === tab
           return (
             <button

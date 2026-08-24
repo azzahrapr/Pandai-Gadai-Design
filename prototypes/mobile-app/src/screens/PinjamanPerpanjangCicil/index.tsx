@@ -1,25 +1,20 @@
 import { useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const imgDate  = "/assets/status-date.svg"
 const imgRight = "/assets/status-right.svg"
-const imgTebus = "/assets/tebus-illus-grp.svg"
 
+const NILAI_PINJAMAN    = 850000
+const BIAYA_JASA        = 85000
 const POIN_BALANCE: number = 12000
-const POIN_EARN     = 2000
-
-interface PinjamanItem {
-  nilai: number
-  name?: string
-  [key: string]: unknown
-}
-
+const POIN_EARN         = 2000
+const DEMO_POIN_BALANCE = POIN_BALANCE
 
 function fmt(n: number) {
   return 'Rp' + n.toLocaleString('id-ID')
 }
 
-type PoinState = 'available' | 'selected' | 'insufficient' | 'maintenance'
+type IPoinState = 'available' | 'selected' | 'insufficient' | 'maintenance'
 
 function Toggle({ on, disabled, onClick }: { on: boolean; disabled?: boolean; onClick: () => void }) {
   return (
@@ -46,22 +41,21 @@ function IconPoinEmas({ faded }: { faded?: boolean }) {
   )
 }
 
-export default function PinjamanTebus() {
+export default function PinjamanPerpanjangCicil() {
   const navigate = useNavigate()
-  const location = useLocation()
-  const pinjaman = (location.state as { pinjaman?: PinjamanItem } | null)?.pinjaman
-  const nominalTebus = pinjaman?.nilai ?? 850000
-
-  const [agreed, setAgreed] = useState(false)
-  const [poinOn, setPoinOn] = useState(false)
+  const [cicilOn, setCicilOn] = useState(false)
+  const [nominalCicilStr, setNominalCicilStr] = useState('')
   const [promoCode, setPromoCode] = useState('')
+  const [poinOn, setPoinOn] = useState(false)
 
-  const DEMO_POIN_BALANCE = POIN_BALANCE
-  const poinState = (DEMO_POIN_BALANCE === 0 ? 'insufficient' : poinOn ? 'selected' : 'available') as PoinState
+  const parsedNominal = parseInt(nominalCicilStr.replace(/\D/g, ''), 10) || 0
+  const showNominalCicilRow = cicilOn && parsedNominal > 0
+  const subtotal = BIAYA_JASA + (showNominalCicilRow ? parsedNominal : 0)
+
+  const poinState = (DEMO_POIN_BALANCE === 0 ? 'insufficient' : poinOn ? 'selected' : 'available') as IPoinState
   const poinDisabled = poinState === 'insufficient' || poinState === 'maintenance'
-
   const poinDiscount = poinState === 'selected' ? DEMO_POIN_BALANCE : 0
-  const total = nominalTebus - poinDiscount
+  const total = subtotal - poinDiscount
 
   function getPoinSubtext() {
     switch (poinState) {
@@ -89,7 +83,7 @@ export default function PinjamanTebus() {
               <path d="M19 12H5M5 12l7 7M5 12l7-7" stroke="#020617" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
-          <h1 className="text-[20px] font-semibold leading-7 tracking-[-0.1px] text-black">Tebus Pinjaman</h1>
+          <h1 className="text-[20px] font-semibold leading-7 tracking-[-0.1px] text-black">Perpanjang Pinjaman</h1>
         </div>
         <button className="flex items-center justify-center w-10 h-10 rounded-full border border-[#a8cfff] bg-[rgba(229,242,255,0.7)]">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#023dff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -103,32 +97,70 @@ export default function PinjamanTebus() {
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto hide-scrollbar px-4 py-4 flex flex-col gap-4">
 
-        {/* Ambil Barang banner */}
-        <div className="bg-[#f8fafc] border border-[#e2e8f0] rounded-lg p-3 flex items-start gap-3">
-          <img src={imgTebus} alt="" className="w-[53px] h-[56px] shrink-0 object-contain" />
-          <div className="flex-1 min-w-0">
-            <p className="text-[14px] text-[#020617] leading-[1.4]">
-              <span className="font-semibold">Ambil Barang Sebelum: </span>
-              <span className="font-semibold text-[#023dff]">5 Jul 2025</span>
-            </p>
-            <p className="text-[12px] text-[#64748b] leading-4 mt-1">
-              Barang siap diambil di cabang, gratis biaya titip hingga hari ke-7
-            </p>
+        {/* Nilai Pinjaman card */}
+        <div className="bg-white border border-[#e2e8f0] rounded-lg px-3 py-3 flex flex-col gap-3">
+          <div className="flex items-center justify-between">
+            <span className="text-[14px] text-[#64748b]">Nilai Pinjaman</span>
+            <span className="text-[14px] text-[#0f1729]">{fmt(NILAI_PINJAMAN)}</span>
           </div>
+          {cicilOn && (
+            <div className="flex items-center justify-between">
+              <span className="text-[14px] text-[#64748b]">Nilai Pinjaman Baru</span>
+              <span className="text-[14px] text-[#0f1729]">
+                {parsedNominal > 0 ? fmt(NILAI_PINJAMAN - parsedNominal) : '-'}
+              </span>
+            </div>
+          )}
+          <div className="flex items-center justify-between">
+            <span className="text-[14px] font-semibold text-[#0f1729]">Tambah cicil pinjaman</span>
+            <Toggle
+              on={cicilOn}
+              onClick={() => {
+                if (cicilOn) setNominalCicilStr('')
+                setCicilOn(v => !v)
+              }}
+            />
+          </div>
+          {cicilOn && (
+            <div className="flex flex-col gap-1.5">
+              <div className="flex border border-[#cbd5e1] rounded-[6px] overflow-hidden">
+                <div className="bg-[#f8fafc] px-3 py-3 flex items-center shrink-0">
+                  <span className="text-[14px] text-[#65758b]">Rp</span>
+                </div>
+                <input
+                  type="number"
+                  value={nominalCicilStr}
+                  onChange={e => setNominalCicilStr(e.target.value)}
+                  placeholder="Masukkan nominal cicil"
+                  className="flex-1 px-3 py-3 text-[14px] text-[#0f1729] outline-none"
+                />
+              </div>
+              <p className="text-[12px] text-[#64748b]">Nominal cicil antara Rp50.000 - Rp750.000</p>
+            </div>
+          )}
         </div>
 
         {/* Detail Pembayaran */}
         <div className="flex flex-col gap-3">
           <p className="text-[14px] font-semibold text-[#0f1729]">Detail Pembayaran</p>
           <div className="bg-[#f8fafc] border border-[#e2e8f0] rounded-lg px-4 py-3 flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <span className="text-[14px] text-[#64748b]">Nominal Tebus</span>
-              <span className="text-[14px] text-[#020617]">{fmt(nominalTebus)}</span>
+            <div className="flex items-start justify-between">
+              <div className="flex flex-col gap-0.5">
+                <span className="text-[14px] text-[#64748b]">Biaya Jasa</span>
+                <span className="text-[12px] text-[#94a3b8]">(0.8% per 7 hari)</span>
+              </div>
+              <span className="text-[14px] text-[#020617]">{fmt(BIAYA_JASA)}</span>
             </div>
+            {showNominalCicilRow && (
+              <div className="flex items-center justify-between">
+                <span className="text-[14px] text-[#64748b]">Nominal Cicil</span>
+                <span className="text-[14px] text-[#020617]">{fmt(parsedNominal)}</span>
+              </div>
+            )}
             <div className="h-px bg-[#e2e8f0]" />
             <div className="flex items-center justify-between">
               <span className="text-[14px] font-semibold text-[#020617]">Subtotal</span>
-              <span className="text-[16px] font-semibold text-[#023dff]">{fmt(nominalTebus)}</span>
+              <span className="text-[16px] font-semibold text-[#023dff]">{fmt(subtotal)}</span>
             </div>
           </div>
         </div>
@@ -192,43 +224,26 @@ export default function PinjamanTebus() {
           <span className="text-[14px] font-semibold text-[#94590a]">{POIN_EARN.toLocaleString('id-ID')}</span>
         </div>
 
-        {/* S&K + total + pay */}
-        <div className="bg-white px-4 py-4 flex flex-col gap-2">
-          <button onClick={() => setAgreed(v => !v)} className="flex items-center gap-2 text-left">
-            <div className={`size-4 rounded flex items-center justify-center shrink-0 border ${agreed ? 'bg-[#023dff] border-[#023dff]' : 'border-[#94a3b8]'}`}>
-              {agreed && (
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                  <path d="M2 5l2.5 2.5L8 3" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+        {/* Total + pay */}
+        <div className="bg-white px-4 py-4 flex items-center gap-2">
+          <div className="flex-1">
+            <p className="text-[14px] font-semibold text-[#020617]">Total Pembayaran</p>
+            <div className="flex items-baseline gap-2">
+              <p className="text-[20px] font-bold text-[#023dff]">{fmt(total)}</p>
+              {poinState === 'selected' && (
+                <p className="text-[14px] text-[#94a3b8] line-through">{fmt(subtotal)}</p>
               )}
             </div>
-            <p className="text-[14px] text-[#0f1729]">
-              Saya menyetujui{' '}
-              <span className="font-semibold text-[#0020e3]">Syarat & Ketentuan</span>
-              {' '}berlaku
-            </p>
-          </button>
-          <div className="flex items-center gap-2">
-            <div className="flex-1">
-              <p className="text-[14px] font-semibold text-[#020617]">Total Pembayaran</p>
-              <div className="flex items-baseline gap-2">
-                <p className="text-[20px] font-bold text-[#023dff]">{fmt(total)}</p>
-                {poinState === 'selected' && (
-                  <p className="text-[14px] text-[#94a3b8] line-through">{fmt(nominalTebus)}</p>
-                )}
-              </div>
-            </div>
-            <button
-              onClick={() => navigate('/pinjaman/pin', { state: { type: 'tebus' } })}
-              disabled={!agreed}
-              className={`rounded-[6px] px-4 py-2 flex items-center gap-2 shrink-0 ${agreed ? 'bg-[#023dff]' : 'bg-[#023dff]/40'}`}
-            >
-              <span className="text-[14px] font-medium text-white">Bayar</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round">
-                <path d="M7 17L17 7M17 7H7M17 7v10"/>
-              </svg>
-            </button>
           </div>
+          <button
+            onClick={() => navigate('/pinjaman/pin', { state: { type: 'perpanjang-cicil' } })}
+            className="bg-[#023dff] rounded-[6px] px-4 py-2 flex items-center gap-2 shrink-0"
+          >
+            <span className="text-[14px] font-medium text-white">Bayar</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round">
+              <path d="M7 17L17 7M17 7H7M17 7v10"/>
+            </svg>
+          </button>
         </div>
 
         {/* Home indicator */}

@@ -7,9 +7,9 @@ const imgHomeOutline     = "/assets/nav-home-outline.svg"
 const imgPoinEmasOutline = "/assets/nav-poin-outline.svg"
 const imgSmileIcon       = "/assets/nav-smile.svg"
 
-type TabType = 'semua' | 'aktif' | 'riwayat'
+type ITabType = 'semua' | 'aktif' | 'riwayat'
 
-export interface PinjamanItemFull {
+export interface IPinjamanItemFull {
   id: string
   sbg: string
   status: 'aktif' | 'selesai'
@@ -22,7 +22,7 @@ export interface PinjamanItemFull {
   jatuhTempo?: string
 }
 
-const pinjamanItems: PinjamanItemFull[] = [
+const pinjamanItems: IPinjamanItemFull[] = [
   {
     id: 'p1',
     sbg: '#2000240800002203',
@@ -59,7 +59,7 @@ const pinjamanItems: PinjamanItemFull[] = [
   },
 ]
 
-function ItemIcon({ type }: { type: PinjamanItemFull['iconType'] }) {
+function ItemIcon({ type }: { type: IPinjamanItemFull['iconType'] }) {
   if (type === 'tv') return (
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#023dff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
       <rect x="2" y="7" width="20" height="15" rx="2"/>
@@ -81,7 +81,7 @@ function ItemIcon({ type }: { type: PinjamanItemFull['iconType'] }) {
   )
 }
 
-function LoanCardPrimary({ item, onBayar }: { item: PinjamanItemFull; onBayar: () => void }) {
+function LoanCardPrimary({ item, onBayar }: { item: IPinjamanItemFull; onBayar: () => void }) {
   return (
     <div className="bg-white border border-[#f9fafb] rounded-[20px] shadow-[0px_4px_3px_rgba(0,0,0,0.1),0px_2px_2px_rgba(0,0,0,0.1)] flex flex-col gap-3 p-3 w-full shrink-0">
       <div className="flex items-start justify-between h-9">
@@ -119,7 +119,7 @@ function LoanCardPrimary({ item, onBayar }: { item: PinjamanItemFull; onBayar: (
   )
 }
 
-function LoanCardSecondary({ item, onLihatDetail }: { item: PinjamanItemFull; onLihatDetail: () => void }) {
+function LoanCardSecondary({ item, onLihatDetail }: { item: IPinjamanItemFull; onLihatDetail: () => void }) {
   return (
     <div className="bg-white border border-[#f9fafb] rounded-[20px] shadow-[0px_4px_3px_rgba(0,0,0,0.1),0px_2px_2px_rgba(0,0,0,0.1)] flex flex-col gap-3 p-3 w-full shrink-0">
       <div className="flex items-start h-9">
@@ -158,9 +158,9 @@ function LoanCardSecondary({ item, onLihatDetail }: { item: PinjamanItemFull; on
 
 export default function DaftarPinjaman() {
   const navigate = useNavigate()
-  const [activeTab, setActiveTab] = useState<TabType>('semua')
+  const [activeTab, setActiveTab] = useState<ITabType>('semua')
 
-  const tabs: { key: TabType; label: string }[] = [
+  const tabs: { key: ITabType; label: string }[] = [
     { key: 'semua',   label: 'Semua'   },
     { key: 'aktif',   label: 'Aktif'   },
     { key: 'riwayat', label: 'Riwayat' },
