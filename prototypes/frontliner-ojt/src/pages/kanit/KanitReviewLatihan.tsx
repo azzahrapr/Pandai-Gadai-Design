@@ -5,7 +5,7 @@ import { MILESTONES } from '../../data/mockData'
 import type { DailyChecklist } from '../../types'
 import { ConfirmationReview } from './KanitReviewConfirmation'
 import { PenaksiranGuidanceBanner } from '../../components/PenaksiranGuidanceBanner'
-import { PanduanPenilaianBanner } from '../../components/PanduanPenilaianBanner'
+import { KondisiIdealInfo } from '../../components/KondisiIdealInfo'
 
 const PENAKSIRAN_MILESTONE_IDS = new Set(['penaksiran-elektronik', 'penaksiran-emas', 'penaksiran-bpkb'])
 
@@ -149,7 +149,6 @@ function ChecklistReview({ flId, moduleKey }: { flId: string; moduleKey: string 
       ) : (
         <div className="space-y-4">
           {isPenaksiran && <PenaksiranGuidanceBanner />}
-          {!isPenaksiran && <PanduanPenilaianBanner checklistItems={milestone?.checklistItems ?? []} />}
           {remainingCount > 0 && (
             <p className="text-xs text-[#65758B]">{remainingCount} latihan menunggu review</p>
           )}
@@ -181,11 +180,15 @@ function ChecklistReview({ flId, moduleKey }: { flId: string; moduleKey: string 
                       </div>
                       {task.completedItemIds.map(itemId => {
                         const itemMark = clItemYesNo[cl.id]?.[itemId]
-                        const itemText = MILESTONES.flatMap(m => m.checklistItems).find(ci => ci.id === itemId)?.text ?? itemId
+                        const checklistItem = MILESTONES.flatMap(m => m.checklistItems).find(ci => ci.id === itemId)
+                        const itemText = checklistItem?.text ?? itemId
                         const isUnmarked = submitAttempted[cl.id] && itemMark === undefined
                         return (
                           <div key={itemId} className={`flex items-center gap-2.5 rounded-lg transition-colors ${isUnmarked ? 'bg-[#FEF2F2] -mx-2 px-2 py-1' : ''}`}>
-                            <p className="text-sm text-[#65758B] flex-1">{itemText}</p>
+                            <div className="text-sm text-[#65758B] flex-1">
+                              {itemText}
+                              <KondisiIdealInfo text={itemText} kondisiIdeal={checklistItem?.kondisiIdeal} />
+                            </div>
                             <div className="flex gap-1 flex-shrink-0">
                               <button onClick={() => setItemMark(cl.id, itemId, true)} className={`h-6 px-2.5 rounded text-[11px] font-semibold transition-all ${itemMark === true ? 'bg-[#16A34A] text-white' : 'bg-[#F1F5F9] text-[#65758B] hover:bg-[#DCFCE7] hover:text-[#16A34A]'}`}>Ya</button>
                               <button onClick={() => setItemMark(cl.id, itemId, false)} className={`h-6 px-2.5 rounded text-[11px] font-semibold transition-all ${itemMark === false ? 'bg-[#DC2626] text-white' : 'bg-[#F1F5F9] text-[#65758B] hover:bg-[#FEE2E2] hover:text-[#DC2626]'}`}>Tidak</button>
@@ -220,7 +223,10 @@ function ChecklistReview({ flId, moduleKey }: { flId: string; moduleKey: string 
                               {it.completed && <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke="white" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
                             </div>
                             <div>
-                              <p className={`text-sm ${it.completed ? 'text-[#0F1729]' : 'text-[#94A3B8]'}`}>{checkItem?.text ?? it.itemId}</p>
+                              <div className={`text-sm ${it.completed ? 'text-[#0F1729]' : 'text-[#94A3B8]'}`}>
+                                {checkItem?.text ?? it.itemId}
+                                <KondisiIdealInfo text={checkItem?.text ?? it.itemId} kondisiIdeal={checkItem?.kondisiIdeal} />
+                              </div>
                               {it.note && <p className="text-xs text-[#65758B] italic mt-0.5">"{it.note}"</p>}
                             </div>
                           </div>

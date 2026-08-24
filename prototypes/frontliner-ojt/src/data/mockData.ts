@@ -1440,10 +1440,12 @@ export const MOCK_USERS: AppUser[] = [
       name: 'Hendra Wijaya',
       branch: 'Cabang Sudirman',
       // Trimmed to exactly the 3 handover-demo cases (2026-08-12) — Andi (pending
-      // review), Sari (carry-over approval), Dewi (ready for Rapot Akhir). fl-003/005/006
+      // review), Sari (carry-over approval), Dewi (ready for Rapot Akhir). fl-003/006
       // still exist as standalone FL logins for the separate "explore the OJT flow"
       // accounts (see Login.tsx), they're just no longer in THIS kanit's roster.
-      flIds: ['fl-001', 'fl-002', 'fl-004'],
+      // fl-005 (Rizky) re-added 2026-08-24 as the "ongoing Level 2, pending review on
+      // Pelayanan Nasabah Visit" case — see his Day 10 cl-fl005-10 checklist below.
+      flIds: ['fl-001', 'fl-002', 'fl-004', 'fl-005'],
     },
   },
 ]
@@ -1859,6 +1861,18 @@ const fl005Checklists: DailyChecklist[] = [
     ],
     status: 'scored', submittedAt: '2026-07-02T17:00:00',
     kanitScore: 89, kanitNote: 'Pelayanan nasabah semakin percaya diri.', kanitScoredAt: '2026-07-02T17:30:00',
+  },
+  // Day 10 (his current day) — Pelayanan Nasabah Visit only, left unscored on purpose:
+  // this is the one pending-review example added 2026-08-24 for the Kanit dashboard
+  // ("ongoing Level 2 FL with a pending Pelayanan Nasabah Visit review"). No sibling
+  // tasks bundled in this entry (unlike day 8/9) — keeps this specific checklist's
+  // moduleKeyOf() resolving to 'pelayanan-nasabah' cleanly for the review-latihan link.
+  {
+    id: 'cl-fl005-10', day: 10, date: '2026-07-03', flId: 'fl-005',
+    tasks: [
+      { taskId: 'pelayanan-nasabah', taskName: 'Pelayanan Nasabah Visit', completedItemIds: PN_ITEMS_FULL, reflection: 'Nasabah komplain lama menunggu, tapi berhasil ditenangkan sambil dijelaskan estimasi waktu.', submittedAt: '2026-07-03T16:00:00' },
+    ],
+    status: 'submitted', submittedAt: '2026-07-03T16:00:00',
   },
 ]
 

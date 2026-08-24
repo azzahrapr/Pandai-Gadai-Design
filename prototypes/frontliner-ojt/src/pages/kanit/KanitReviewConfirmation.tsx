@@ -4,7 +4,7 @@ import { useApp } from '../../context/AppContext'
 import { MILESTONES } from '../../data/mockData'
 import type { TaskConfirmation } from '../../types'
 import { PenaksiranGuidanceBanner } from '../../components/PenaksiranGuidanceBanner'
-import { PanduanPenilaianBanner } from '../../components/PanduanPenilaianBanner'
+import { KondisiIdealInfo } from '../../components/KondisiIdealInfo'
 
 const PENAKSIRAN_MILESTONE_IDS = new Set(['penaksiran-elektronik', 'penaksiran-bpkb', 'penaksiran-emas'])
 
@@ -344,7 +344,6 @@ export function ConfirmationReview({ flId, milestoneId }: { flId: string; milest
         </div>
       ) : (
         <div className="space-y-4">
-          <PanduanPenilaianBanner checklistItems={milestone.checklistItems} />
           {remainingCount > 0 && (
             <p className="text-xs text-[#65758B]">{remainingCount} latihan menunggu review</p>
           )}
@@ -352,20 +351,29 @@ export function ConfirmationReview({ flId, milestoneId }: { flId: string; milest
             // Every latihan is a collapsible section, even one with only a single pending
             // submission — no special-cased "always expanded, no toggle" card anymore.
             const isExpanded = !!expandedGroups[group.itemId]
+            // KondisiIdealInfo is a real <button> (opens its own bottom sheet) — can't
+            // nest inside the header's own toggle button, so the header is a clickable
+            // <div> instead, with the info icon's own click stopped from bubbling up to
+            // the toggle.
             return (
               <div key={group.itemId} className="bg-white rounded-xl border border-[#E1E7EF] overflow-hidden">
-                <button
+                <div
                   onClick={() => toggleGroup(group.itemId)}
-                  className="w-full px-5 py-3.5 bg-[#F8FAFC] flex items-center justify-between text-left hover:bg-[#F1F5F9] transition-colors"
+                  className="w-full px-5 py-3.5 bg-[#F8FAFC] flex items-center justify-between text-left hover:bg-[#F1F5F9] transition-colors cursor-pointer"
                 >
-                  <div>
-                    <p className="font-semibold text-[#0F1729] text-sm">{group.itemText}</p>
+                  <div className="min-w-0">
+                    <div className="font-semibold text-[#0F1729] text-sm">
+                      {group.itemText}
+                      <span onClick={e => e.stopPropagation()}>
+                        <KondisiIdealInfo text={group.itemText} kondisiIdeal={milestone.checklistItems.find(ci => ci.id === group.itemId)?.kondisiIdeal} />
+                      </span>
+                    </div>
                     <p className="text-xs text-[#65758B] mt-0.5">{group.confirmations.length} latihan menunggu review</p>
                   </div>
                   <span className={`text-[#94A3B8] transition-transform duration-200 flex-shrink-0 ${isExpanded ? 'rotate-180' : ''}`}>
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   </span>
-                </button>
+                </div>
                 {isExpanded && (
                   <div className="border-t border-[#E1E7EF]">
                     {group.confirmations.map((c, i) => (
