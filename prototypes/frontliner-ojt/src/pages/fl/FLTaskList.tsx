@@ -80,7 +80,19 @@ export default function FLSubmitTask() {
   const [refleksi,     setRefleksi]     = useState<Record<string, string>>({})
   const [nomorSbgMap,  setNomorSbgMap]  = useState<Record<string, string>>({})
   const [showFormFor,  setShowFormFor]  = useState<Record<string, boolean>>({})
-  const [multiErrors,  setMultiErrors]  = useState<Record<string, { refleksi?: boolean; sbg?: boolean }>>({})
+  const [multiErrors,  setMultiErrors]  = useState<Record<string, { refleksi?: boolean; sbg?: boolean; subItems?: boolean }>>({})
+  // Per-item sub-item checklist state — only meaningful for items with `subItems` set
+  // (e.g. Cash Management's 3 groups, each bundling 1-2 curriculum Task List rows).
+  const [subItemChecks, setSubItemChecks] = useState<Record<string, Set<string>>>({})
+
+  function toggleSubItem(itemId: string, subId: string) {
+    setSubItemChecks(prev => {
+      const next = new Set(prev[itemId] ?? [])
+      next.has(subId) ? next.delete(subId) : next.add(subId)
+      return { ...prev, [itemId]: next }
+    })
+    setMultiErrors(prev => prev[itemId]?.subItems ? { ...prev, [itemId]: { ...prev[itemId], subItems: false } } : prev)
+  }
 
   // ── Guard ───────────────────────────────────────────────────
   if (!milestone) {
@@ -264,8 +276,12 @@ export default function FLSubmitTask() {
     if (!item) return
     const missingRefleksi = !refleksi[itemId]?.trim()
     const missingSbg = needsSbg && !nomorSbgMap[itemId]?.trim()
-    if (missingRefleksi || missingSbg) {
-      setMultiErrors(prev => ({ ...prev, [itemId]: { refleksi: missingRefleksi, sbg: missingSbg } }))
+    // All sub-items required — the curriculum doesn't define a partial-credit threshold
+    // for these groups (unlike e.g. Personal Grooming's explicit "3 of 4"), so every
+    // bundled Task List row must be checked before this group's session counts.
+    const missingSubItems = !!item.subItems?.length && (subItemChecks[itemId]?.size ?? 0) < item.subItems.length
+    if (missingRefleksi || missingSbg || missingSubItems) {
+      setMultiErrors(prev => ({ ...prev, [itemId]: { refleksi: missingRefleksi, sbg: missingSbg, subItems: missingSubItems } }))
       return
     }
     const now = new Date().toISOString()
@@ -277,12 +293,14 @@ export default function FLSubmitTask() {
       itemText: item.text,
       nomorSbg: needsSbg && nomorSbgMap[itemId]?.trim() ? nomorSbgMap[itemId].trim() : undefined,
       catatan: refleksi[itemId]?.trim() || undefined,
+      completedSubItemIds: item.subItems?.length ? [...(subItemChecks[itemId] ?? [])] : undefined,
       submittedAt: now,
       day: profile.currentDay,
     }
     submitTaskConfirmation(confirmation)
     setRefleksi(prev => ({ ...prev, [itemId]: '' }))
     setNomorSbgMap(prev => ({ ...prev, [itemId]: '' }))
+    setSubItemChecks(prev => ({ ...prev, [itemId]: new Set() }))
     setShowFormFor(prev => ({ ...prev, [itemId]: false }))
   }
 
@@ -843,6 +861,37 @@ export default function FLSubmitTask() {
                     </button>
                   ) : (
                     <div className="space-y-3 pt-1">
+                      {item.subItems && item.subItems.length > 0 && (
+                        <div>
+                          <label className="block text-xs font-semibold text-[#0F1729] mb-1.5">
+                            Checklist <span className="text-[#DC2626]">*</span>
+                          </label>
+                          {/* Same anatomy as the daily-checklist input (Personal Grooming etc.
+                              in the SINGLE SUBMISSION branch above) — plain spaced rows, no
+                              bordered box or dividers between items. */}
+                          <div className="space-y-3">
+                            {item.subItems.map(sub => {
+                              const checked = subItemChecks[item.id]?.has(sub.id) ?? false
+                              return (
+                                <button
+                                  key={sub.id}
+                                  type="button"
+                                  onClick={() => toggleSubItem(item.id, sub.id)}
+                                  className="w-full flex items-start gap-3 text-left cursor-pointer group"
+                                >
+                                  <div className={`w-5 h-5 rounded border-2 flex-shrink-0 mt-0.5 flex items-center justify-center transition-all ${checked ? 'bg-[#023DFF] border-[#023DFF]' : 'border-[#CBD5E1] group-hover:border-[#023DFF]'}`}>
+                                    {checked && <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                                  </div>
+                                  <p className="text-sm leading-snug text-[#0F1729]">{sub.text}</p>
+                                </button>
+                              )
+                            })}
+                          </div>
+                          {multiErrors[item.id]?.subItems && (
+                            <p className="text-xs text-[#DC2626] mt-1">Semua item checklist wajib dicentang sebelum submit.</p>
+                          )}
+                        </div>
+                      )}
                       {needsSbg && (
                         <div>
                           <label className="block text-xs font-semibold text-[#0F1729] mb-1.5">

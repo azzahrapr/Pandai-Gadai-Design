@@ -577,11 +577,38 @@ export const MILESTONES: Milestone[] = [
         content: `## Uang Kelebihan Nasabah\n\n- Jika nasabah membayar lebih dari yang seharusnya\n- Arahkan nasabah untuk cek kelebihan via aplikasi atau langsung di cabang\n- Input selisih kelebihan di modul Cash Management`,
       },
     ],
+    // Individual-type, one accordion section per curriculum "Daftar Isi" group (not per
+    // raw Task List row) — corrected 2026-08-26 from an earlier flat single-checklist
+    // attempt. The sheet's Checklist column is TRUE for every row here (unlike SOP
+    // Administrasi/Packing/Offloading's Refleksi/Essay=TRUE rows), so each group's own
+    // submission form is a checklist of its `subItems` (see FLTaskList.tsx's subItems
+    // rendering) instead of a free-text essay — still one independently-targeted
+    // TaskConfirmation per group, same accordion shape as SOP Administrasi otherwise.
     submissionType: 'individual',
     checklistItems: [
-      { id: 'cm-1', text: 'Administratif Tarik-Setor Tunai', category: 'Kas', description: 'Mampu menginput laporan tarik setor tunai di sistem.', target: 1, targetForPass: 1, kondisiIdeal: 'Mampu menginput laporan tarik setor tunai' },
-      { id: 'cm-2', text: 'Administratif Penggunaan Kas Kecil', category: 'Kas Kecil', description: 'Mampu menginput pengeluaran kas kecil pada modul cash management.', target: 1, targetForPass: 1, kondisiIdeal: 'Mampu menginput pengeluaran kas kecil pada cash management' },
-      { id: 'cm-3', text: 'Administratif Uang Kelebihan Nasabah', category: 'Nasabah', description: 'Mampu mengarahkan nasabah dalam pengecekan uang kelebihan dan penginputannya pada cash management.', target: 1, targetForPass: 1, kondisiIdeal: 'Mampu mengarahkan nasabah dalam pengecekan uang kelebihan dan penginputannya pada cash management' },
+      {
+        id: 'cm-1', text: 'Tarik-Setor Tunai Cabang', category: 'Kas', target: 1, targetForPass: 1,
+        kondisiIdeal: 'Mampu menginput laporan tarik setor tunai',
+        subItems: [
+          { id: 'cm-1-a', text: 'Proses Setor/Tarik ke ATM dan penyimpanan di cashbox' },
+          { id: 'cm-1-b', text: 'Administratif Cash Management Tarik-Setor Tunai' },
+        ],
+      },
+      {
+        id: 'cm-2', text: 'Kas Kecil Cabang', category: 'Kas Kecil', target: 1, targetForPass: 1,
+        kondisiIdeal: 'Mampu menginput pengeluaran kas kecil pada cash management',
+        subItems: [
+          { id: 'cm-2-a', text: 'Administratif Cash Management Penggunaan Kas Kecil' },
+        ],
+      },
+      {
+        id: 'cm-3', text: 'Uang Kelebihan', category: 'Nasabah', target: 1, targetForPass: 1,
+        kondisiIdeal: 'Mampu mengarahkan nasabah dalam pengecekan uang kelebihan dan penginputannya pada cash management',
+        subItems: [
+          { id: 'cm-3-a', text: 'Mengarahkan nasabah dalam pengecekan uang kelebihan' },
+          { id: 'cm-3-b', text: 'Administratif Cash Management Uang Kelebihan Nasabah' },
+        ],
+      },
     ],
     quiz: [
       {

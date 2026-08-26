@@ -225,6 +225,32 @@ export function ConfirmationReview({ flId, milestoneId }: { flId: string; milest
                 </div>
               </div>
             )}
+            {/* Read-only — the FL already checked these off at submission (all required,
+                see FLTaskList.tsx's subItems form); the kanit's own judgment call for this
+                group as a whole is the Memenuhi/Tidak Memenuhi Standar decision below, not
+                a per-sub-item mark. */}
+            {(() => {
+              const subItems = milestone?.checklistItems.find(i => i.id === c.itemId)?.subItems
+              if (!subItems?.length) return null
+              return (
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-wide text-[#65758B] mb-1.5">Checklist Peserta</p>
+                  <div className="space-y-1.5">
+                    {subItems.map(sub => {
+                      const checked = c.completedSubItemIds?.includes(sub.id) ?? false
+                      return (
+                        <div key={sub.id} className="flex items-center gap-2.5">
+                          <div className={`w-4 h-4 rounded flex-shrink-0 flex items-center justify-center ${checked ? 'bg-[#16A34A]' : 'bg-[#F1F5F9] border border-[#CBD5E1]'}`}>
+                            {checked && <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke="white" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                          </div>
+                          <p className={`text-sm ${checked ? 'text-[#0F1729]' : 'text-[#94A3B8]'}`}>{sub.text}</p>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )
+            })()}
             <div>
               <p className="text-[10px] font-semibold uppercase tracking-wide text-[#65758B] mb-1">Refleksi / Catatan</p>
               <p className="text-sm text-[#0F1729] leading-relaxed italic">{c.catatan ? `"${c.catatan}"` : 'Tidak ada catatan'}</p>

@@ -36,9 +36,16 @@ export interface ChecklistItem extends TargetSpec {
   description?: string
   // Curriculum spreadsheet's "Kondisi Ideal" column (col AD) — a standardized acceptance
   // criterion for this item, shown to the Kanit as review guidance (see
-  // PanduanPenilaianBanner). Only set for items the curriculum actually defines one for;
-  // most items have none, which is expected — don't backfill a guess.
+  // KondisiIdealInfo). Only set for items the curriculum actually defines one for; most
+  // items have none, which is expected — don't backfill a guess.
   kondisiIdeal?: string
+  // For an individual-type milestone whose "Daftar Isi" grouping bundles more than one
+  // curriculum Task List row under itself (e.g. Cash Management's "Tarik-Setor Tunai
+  // Cabang" covers 2 task-list rows) — when set, this item's own FLTaskList submission
+  // form becomes a checklist of these sub-items (all required) instead of a plain
+  // free-text-only form. See TaskConfirmation.completedSubItemIds for the submitted
+  // record shape.
+  subItems?: { id: string; text: string }[]
 }
 
 export interface Milestone extends TargetSpec {
@@ -69,6 +76,9 @@ export interface TaskConfirmation {
   nomorSbg?: string
   nomorBox?: string[]
   catatan?: string
+  // Which of the parent ChecklistItem's subItems (if any) were checked at submission —
+  // see ChecklistItem.subItems. Undefined for every item that has no subItems.
+  completedSubItemIds?: string[]
   kanitNote?: string
   kanitReviewedAt?: string
   // true = lulus, false = tidak lulus (remedial required), undefined = belum dinilai
